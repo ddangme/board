@@ -33,25 +33,34 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter @Column(nullable = false)
+    @Setter
+    @Column(nullable = false)
     private String title; // 제목
-    @Setter @Column(nullable = false, length = 10000)
+    @Setter
+    @Column(nullable = false, length = 10000)
     private String content; // 본문
-    @Setter private String hashtag; // 해시태그
+    @Setter
+    private String hashtag; // 해시태그
 
 
-
-    @CreatedDate private LocalDateTime createdAt; // 생성 일시
-    @CreatedBy @Column(nullable = false, length = 100) private String createdBy; // 생성자
-    @LastModifiedDate private LocalDateTime modifiedAt; // 수정 일시
-    @LastModifiedBy @Column(nullable = false, length = 100) private String modifiedBy; // 수정자
+    @CreatedDate
+    private LocalDateTime createdAt; // 생성 일시
+    @CreatedBy
+    @Column(nullable = false, length = 100)
+    private String createdBy; // 생성자
+    @LastModifiedDate
+    private LocalDateTime modifiedAt; // 수정 일시
+    @LastModifiedBy
+    @Column(nullable = false, length = 100)
+    private String modifiedBy; // 수정자
 
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private final Set<ArticleComment> articleComments = new LinkedHashSet<>();
 
-    protected Article() { }
+    protected Article() {
+    }
 
     private Article(String title, String content, String hashtag) {
         this.title = title;
