@@ -50,20 +50,18 @@ class ArticleControllerTest {
                 .andExpect(model().attributeExists("articleComments"));
     }
 
-    @Disabled("구현 중")
     @DisplayName("[view][GET] 게시글 검색 전용 페이지 - 정상 호출")
     @Test
     void givenNothing_whenRequestingArticleSearchView_thenReturnsArticleSearchView() throws Exception {
         // Given
 
         // When & Then
-        mvc.perform(get("/articles/search"))
+        mvc.perform(get("/articles/index"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
-                .andExpect(view().name("articles/search"));
+                .andExpect(view().name("articles/index"));
     }
 
-    @Disabled("구현 중")
     @DisplayName("[view][GET] 게시글 해시태그 검색 페이지 - 정상 호출")
     @Test
     void givenNothing_whenRequestingArticleHashtagSearchView_thenReturnsArticleHashtagSearchView() throws Exception {
@@ -73,6 +71,6 @@ class ArticleControllerTest {
         mvc.perform(get("/articles/search-hashtag"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
-                .andExpect(view().name("articles/search-hashtab"));
+                .andExpect(view().name("articles/search-hashtag"));
     }
 }
