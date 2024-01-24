@@ -1,7 +1,5 @@
 package com.ddangme.board.dto;
 
-
-
 import com.ddangme.board.domain.Article;
 
 import java.time.LocalDateTime;

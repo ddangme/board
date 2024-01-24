@@ -11,14 +11,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Disabled("Spring Data REST 통합 테스트는 불필요하기 때문에 제외한다.")
-@DisplayName("Data REST API TEST")
-@AutoConfigureMockMvc
+@Disabled("Spring Data REST 통합테스트는 불필요하므로 제외시킴")
+@DisplayName("Data REST - API 테스트")
 @Transactional
+@AutoConfigureMockMvc
 @SpringBootTest
 public class DataRestTest {
 
@@ -97,4 +96,5 @@ public class DataRestTest {
         mvc.perform(delete("/api/userAccounts")).andExpect(status().isNotFound());
         mvc.perform(head("/api/userAccounts")).andExpect(status().isNotFound());
     }
+
 }

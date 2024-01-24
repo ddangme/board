@@ -20,24 +20,25 @@ class PaginationServiceTest {
 
     private final PaginationService sut;
 
-    public PaginationServiceTest(@Autowired PaginationService sut) {
-        this.sut = sut;
+    public PaginationServiceTest(@Autowired PaginationService paginationService) {
+        this.sut = paginationService;
     }
 
+
     @DisplayName("현재 페이지 번호와 총 페이지 수를 주면, 페이징 바 리스트를 만들어준다.")
-    @MethodSource()
+    @MethodSource
     @ParameterizedTest(name = "[{index}] 현재 페이지: {0}, 총 페이지: {1} => {2}")
-    void givenCurrentPageNumberAndTotalPageNumber_whenCalculating_thenPaginationBarNumbers(int currentPageNumber, int totalPageNumber, List<Integer> expected) {
+    void givenCurrentPageNumberAndTotalPages_whenCalculating_thenReturnsPaginationBarNumbers(int currentPageNumber, int totalPages, List<Integer> expected) {
         // Given
 
         // When
-        List<Integer> actual = sut.getPaginationBarNumbers(currentPageNumber, totalPageNumber);
+        List<Integer> actual = sut.getPaginationBarNumbers(currentPageNumber, totalPages);
 
         // Then
         assertThat(actual).isEqualTo(expected);
     }
 
-    static Stream<Arguments> givenCurrentPageNumberAndTotalPageNumber_whenCalculating_thenPaginationBarNumbers() {
+    static Stream<Arguments> givenCurrentPageNumberAndTotalPages_whenCalculating_thenReturnsPaginationBarNumbers() {
         return Stream.of(
                 arguments(0, 13, List.of(0, 1, 2, 3, 4)),
                 arguments(1, 13, List.of(0, 1, 2, 3, 4)),
@@ -63,4 +64,5 @@ class PaginationServiceTest {
         // Then
         assertThat(barLength).isEqualTo(5);
     }
+
 }

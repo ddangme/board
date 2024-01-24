@@ -4,10 +4,10 @@ import com.ddangme.board.domain.Article;
 import com.ddangme.board.domain.QArticle;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
-import java.util.Collection;
 import java.util.List;
 
 public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport implements ArticleRepositoryCustom {
+
     public ArticleRepositoryCustomImpl() {
         super(Article.class);
     }
@@ -19,6 +19,8 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
         return from(article)
                 .distinct()
                 .select(article.hashtag)
+                .where(article.hashtag.isNotNull())
                 .fetch();
     }
+
 }
