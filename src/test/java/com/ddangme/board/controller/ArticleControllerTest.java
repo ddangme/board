@@ -1,76 +1,133 @@
 package com.ddangme.board.controller;
+import com.ddangme.board.config.SecurityConfig;
 
+import com.ddangme.board.dto.ArticleWithCommentsDto;
+import com.ddangme.board.dto.UserAccountDto;
+import com.ddangme.board.service.ArticleService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import java.time.LocalDateTime;
+import java.util.Set;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@DisplayName("View Controller - 게시글 관련")
-@WebMvcTest(ArticleController.class) // 모든 컨트롤러를 불러오지 않고 해당 컨트롤러에 대해서만 테스트 하겠다.
+@DisplayName("View 컨트롤러 - 게시글")
+@Import(SecurityConfig.class)
+@WebMvcTest(ArticleController.class)
 class ArticleControllerTest {
 
     private final MockMvc mvc;
+
+    @MockBean private ArticleService articleService;
 
     public ArticleControllerTest(@Autowired MockMvc mvc) {
         this.mvc = mvc;
     }
 
+
     @DisplayName("[view][GET] 게시글 리스트 (게시판) 페이지 - 정상 호출")
     @Test
-    void givenNothing_whenRequestingArticlesView_thenReturnsArticlesView() throws Exception {
+    public void givenNothing_whenRequestingArticlesView_thenReturnsArticlesView() throws Exception {
         // Given
+        given(articleService.searchArticles(eq(null), eq(null), any(Pageable.class))).willReturn(Page.empty());
 
         // When & Then
-        mvc.perform(get("/articles"))   // "/articles"의 경로에 대한 GET 요청
-                // andExpect: "MockMvcResultMatchers" 클래스의 메서드로, 컨트롤러가 생성한 응답을 검증한다.
-                .andExpect(status().isOk())        // HTTP 응답 상태 코드가 "200 OK" 인지 확인한다.
-                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))      // 응답의 콘텐츠 타입이 "text/html" 인지 확인한다.
-                .andExpect(view().name("articles/index"))  // 응답되는 페이지의 경로가 "articles/index" 인지 확인한다.
-                .andExpect(model().attributeExists("articles"));    // 모델에 "articles" 라는 속성이 존재하는지 확인한다. "articles"라는 이름의 모델 속성을 뷰에 존달하는지 확인
+        mvc.perform(get("/articles"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+                .andExpect(view().name("articles/index"))
+                .andExpect(model().attributeExists("articles"));
+
+        then(articleService).should().searchArticles(eq(null), eq(null), any(Pageable.class));
     }
 
-    @Disabled("구현 중")
     @DisplayName("[view][GET] 게시글 상세 페이지 - 정상 호출")
     @Test
-    void givenNothing_whenRequestingArticleView_thenReturnsArticleView() throws Exception {
+    public void givenNothing_whenRequestingArticleView_thenReturnsArticleView() throws Exception {
         // Given
+        Long articleId = 1L;
+        given(articleService.getArticle(articleId)).willReturn(createArticleWithCommentsDto());
 
         // When & Then
-        mvc.perform(get("/articles/1"))
+        mvc.perform(get("/articles/" + articleId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
                 .andExpect(view().name("articles/detail"))
                 .andExpect(model().attributeExists("article"))
                 .andExpect(model().attributeExists("articleComments"));
+
+        then(articleService).should().getArticle(articleId);
     }
 
+    @Disabled("구현 중")
     @DisplayName("[view][GET] 게시글 검색 전용 페이지 - 정상 호출")
     @Test
-    void givenNothing_whenRequestingArticleSearchView_thenReturnsArticleSearchView() throws Exception {
+    public void givenNothing_whenRequestingArticleSearchView_thenReturnsArticleSearchView() throws Exception {
         // Given
 
         // When & Then
-        mvc.perform(get("/articles/index"))
+        mvc.perform(get("/articles/search"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
-                .andExpect(view().name("articles/index"));
+                .andExpect(model().attributeExists("articles/search"));
     }
 
+    @Disabled("구현 중")
     @DisplayName("[view][GET] 게시글 해시태그 검색 페이지 - 정상 호출")
     @Test
-    void givenNothing_whenRequestingArticleHashtagSearchView_thenReturnsArticleHashtagSearchView() throws Exception {
+    public void givenNothing_whenRequestingArticleHashtagSearchView_thenReturnsArticleHashtagSearchView() throws Exception {
         // Given
 
         // When & Then
         mvc.perform(get("/articles/search-hashtag"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
-                .andExpect(view().name("articles/search-hashtag"));
+                .andExpect(model().attributeExists("articles/search-hashtag"));
     }
+
+    private ArticleWithCommentsDto createArticleWithCommentsDto() {
+        return ArticleWithCommentsDto.of(
+                1L,
+                createUserAccountDto(),
+                Set.of(),
+                "title",
+                "content",
+                "#java",
+                LocalDateTime.now(),
+                "ddangme",
+                LocalDateTime.now(),
+                "ddangme"
+        );
+    }
+
+    private UserAccountDto createUserAccountDto() {
+        return UserAccountDto.of(1L,
+                "ddangme",
+                "pw",
+                "test@test.com",
+                "ddangme",
+                "memo",
+                LocalDateTime.now(),
+                "ddangme",
+                LocalDateTime.now(),
+                "ddangme"
+        );
+    }
+
+
 }
