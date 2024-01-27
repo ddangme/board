@@ -7,6 +7,7 @@ import com.ddangme.board.dto.ArticleCommentDto;
 import com.ddangme.board.dto.UserAccountDto;
 import com.ddangme.board.repository.ArticleCommentRepository;
 import com.ddangme.board.repository.ArticleRepository;
+import com.ddangme.board.repository.UserAccountRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +31,7 @@ class ArticleCommentServiceTest {
 
     @Mock private ArticleRepository articleRepository;
     @Mock private ArticleCommentRepository articleCommentRepository;
+    @Mock private UserAccountRepository userAccountRepository;
 
     @DisplayName("게시글 ID로 조회하면, 해당하는 댓글 리스트를 반환한다.")
     @Test
@@ -127,6 +129,10 @@ class ArticleCommentServiceTest {
         // Then
         then(articleCommentRepository).should().deleteById(articleCommentId);
     }
+
+
+
+
 
 
     private ArticleCommentDto createArticleCommentDto(String content) {
