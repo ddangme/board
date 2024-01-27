@@ -2,7 +2,6 @@ package com.ddangme.board.controller;
 
 import com.ddangme.board.domain.constant.FormStatus;
 import com.ddangme.board.domain.constant.SearchType;
-import com.ddangme.board.dto.UserAccountDto;
 import com.ddangme.board.dto.request.ArticleRequest;
 import com.ddangme.board.dto.response.ArticleResponse;
 import com.ddangme.board.dto.response.ArticleWithCommentsResponse;
@@ -84,8 +83,9 @@ public class ArticleController {
 
     @PostMapping ("/form")
     public String postNewArticle(
-            ArticleRequest articleRequest,
-            @AuthenticationPrincipal BoardPrincipal boardPrincipal) {
+            @AuthenticationPrincipal BoardPrincipal boardPrincipal,
+            ArticleRequest articleRequest
+    ) {
         articleService.saveArticle(articleRequest.toDto(boardPrincipal.toDto()));
 
         return "redirect:/articles";
@@ -104,9 +104,9 @@ public class ArticleController {
     @PostMapping ("/{articleId}/form")
     public String updateArticle(
             @PathVariable Long articleId,
-            ArticleRequest articleRequest,
-            @AuthenticationPrincipal BoardPrincipal boardPrincipal
-            ) {
+            @AuthenticationPrincipal BoardPrincipal boardPrincipal,
+            ArticleRequest articleRequest
+    ) {
         articleService.updateArticle(articleId, articleRequest.toDto(boardPrincipal.toDto()));
 
         return "redirect:/articles/" + articleId;
@@ -115,8 +115,8 @@ public class ArticleController {
     @PostMapping ("/{articleId}/delete")
     public String deleteArticle(
             @PathVariable Long articleId,
-            @AuthenticationPrincipal BoardPrincipal boardPrincipal) {
-
+            @AuthenticationPrincipal BoardPrincipal boardPrincipal
+    ) {
         articleService.deleteArticle(articleId, boardPrincipal.getUsername());
 
         return "redirect:/articles";
