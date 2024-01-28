@@ -71,7 +71,7 @@ public class ArticleService {
 
         Article article = dto.toEntity(userAccount);
         article.addHashtags(hashtags);
-        articleRepository.save(dto.toEntity(userAccount));
+        articleRepository.save(article);
     }
 
     public void updateArticle(Long articleId, ArticleDto dto) {
@@ -130,11 +130,15 @@ public class ArticleService {
     }
 
     private Set<Hashtag> renewHashtagsFromContent(String content) {
+        // TODO: 대문자, 소문자 구별하지 않도록 처리 필요
+
         Set<String> hashtagNamesInContent = hashtagService.parseHashtagNames(content);
         Set<Hashtag> hashtags = hashtagService.findHashtagsByNames(hashtagNamesInContent);
         Set<String> existingHashtagNames = hashtags.stream()
                 .map(Hashtag::getHashtagName)
                 .collect(Collectors.toUnmodifiableSet());
+
+        System.out.println("해시태그: " + hashtagNamesInContent.toString());
 
         hashtagNamesInContent.forEach(newHashtagName -> {
             if (!existingHashtagNames.contains(newHashtagName)) {
