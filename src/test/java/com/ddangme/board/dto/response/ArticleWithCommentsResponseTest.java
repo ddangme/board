@@ -51,11 +51,13 @@ class ArticleWithCommentsResponseTest {
 
 
     @DisplayName("게시글 + 댓글 dto를 api 응답으로 변환할 때, 댓글 부모 자식 관계를 각각의 규칙으로 정렬하여 정리한다.")
-        @Test
+    @Test
     void givenArticleWithCommentsDto_whenMapping_thenOrganizesParentAndChildCommentsWithCertainOrders() {
         // Given
         LocalDateTime now = LocalDateTime.now();
-        Set<ArticleCommentDto> articleCommentDtos = Set.of(createArticleCommentDto(2L, 1L, now.plusDays(1L)),
+        Set<ArticleCommentDto> articleCommentDtos = Set.of(
+                createArticleCommentDto(1L, null, now),
+                createArticleCommentDto(2L, 1L, now.plusDays(1L)),
                 createArticleCommentDto(3L, 1L, now.plusDays(3L)),
                 createArticleCommentDto(4L, 1L, now),
                 createArticleCommentDto(5L, null, now.plusDays(5L)),
