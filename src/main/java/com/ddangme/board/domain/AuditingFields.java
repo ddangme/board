@@ -18,6 +18,9 @@ import java.time.LocalDateTime;
 @ToString
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
+/*
+   abstract: 추상 클래스로 직접 인스턴스를 생성할 수 없다.
+ */
 public abstract class AuditingFields {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -32,7 +35,7 @@ public abstract class AuditingFields {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @LastModifiedDate
     @Column(nullable = false)
-    protected LocalDateTime modifiedAt; // 수정일시
+    protected LocalDateTime modifiedAt; // 수정일시}
 
     @LastModifiedBy
     @Column(nullable = false, length = 100)
