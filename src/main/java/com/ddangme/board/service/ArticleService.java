@@ -118,7 +118,7 @@ public class ArticleService {
     @Transactional(readOnly = true)
     public Page<ArticleDto> searchArticlesViaHashtag(String hashtagName, Pageable pageable) {
         if (hashtagName == null || hashtagName.isBlank()) {
-            return Page.empty();
+            return Page.empty(pageable);
         }
 
         return articleRepository.findByHashtagNames(List.of(hashtagName), pageable)
